@@ -8,6 +8,7 @@ import {
   ScrollView,
   ImageBackground,
   Dimensions,
+  TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
 import { colors } from '../../utils/colors';
@@ -19,6 +20,7 @@ import { getData, storeData, urlAPI } from '../../utils/localStorage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
 import DatePicker from 'react-native-date-picker';
+import { Icon } from 'react-native-elements';
 
 export default function EditProfile({ navigation, route }) {
   navigation.setOptions({
@@ -28,6 +30,8 @@ export default function EditProfile({ navigation, route }) {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [kota, setKota] = useState([]);
   const [data, setData] = useState({
 
   });
@@ -165,7 +169,7 @@ export default function EditProfile({ navigation, route }) {
     setLoading(true);
     console.log('kirim edit', data);
     axios.post(urlAPI + '/profile.php', data).then(res => {
-      console.log(res);
+      console.log(res.data);
       storeData('user', res.data);
       setLoading(false);
       showMessage({
@@ -175,7 +179,7 @@ export default function EditProfile({ navigation, route }) {
 
       navigation.replace('MainApp');
 
-      // console.log(err[0]);
+
     });
   };
   return (
@@ -205,12 +209,6 @@ export default function EditProfile({ navigation, route }) {
         </View>
         <MyGap jarak={5} />
 
-        {/* <UploadFoto
-          onPress1={() => getCamera(1)}
-          onPress2={() => getGallery(1)}
-          label="Upload Foto Profile"
-          foto={foto}
-        /> */}
 
 
         <MyGap jarak={10} />
@@ -254,9 +252,61 @@ export default function EditProfile({ navigation, route }) {
             })
           }
         />
-
-
         <MyGap jarak={10} />
+        <MyInput
+          label="Kota - Provinsi"
+          iconname="location-outline"
+          value={data.kota}
+          onChangeText={value => {
+            setData({
+              ...data,
+              kota: value,
+            })
+            if (value.length > 0) {
+              axios.post(urlAPI + '/1kota.php', {
+                key: value
+              }).then(res => {
+                setOpen(true);
+                console.warn('get user', res.data);
+                setKota(res.data);
+              })
+            }
+          }
+          }
+        />
+        <MyGap jarak={10} />
+        {open && <ScrollView showsVerticalScrollIndicator={false} style={{
+          backgroundColor: colors.border
+        }}>
+
+          <TouchableOpacity onPress={() => setOpen(false)} style={{
+            backgroundColor: colors.primary,
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            paddingRight: 10,
+          }}>
+            <Icon name='close' type='ionicon' color={colors.white} />
+          </TouchableOpacity>
+
+          {kota.map(i => {
+            return (
+              <TouchableOpacity onPress={() => {
+                setData({
+                  ...data,
+                  fid_kota: i.id,
+                  kota: i.kota
+                });
+                setOpen(false);
+              }} style={{
+                padding: 10,
+                backgroundColor: colors.white,
+                marginVertical: 1,
+              }}>
+                <Text>{i.kota}</Text>
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>}
         <MyInput
           label="Alamat"
           iconname="map-outline"
