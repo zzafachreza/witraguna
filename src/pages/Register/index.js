@@ -26,6 +26,7 @@ export default function Register({ navigation }) {
   const windowHeight = Dimensions.get('window').height;
   const [open, setOpen] = useState(false);
   const [kota, setKota] = useState([]);
+  const [show, setShow] = useState(true);
   const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -52,8 +53,7 @@ export default function Register({ navigation }) {
     email: '',
     password: '',
     telepon: '',
-    nama_toko: '',
-    alamat_toko: ''
+    kota: ''
   });
 
   const simpan = () => {
@@ -61,7 +61,8 @@ export default function Register({ navigation }) {
       data.nama_lengkap.length === 0 &&
       data.email.length === 0 &&
       data.password.length === 0 &&
-      data.telepon.length === 0
+      data.telepon.length === 0 &&
+      data.kota.length === 0
     ) {
       showMessage({
         message: 'Maaf Semua Field Harus Di isi !',
@@ -69,6 +70,14 @@ export default function Register({ navigation }) {
     } else if (data.nama_lengkap.length === 0) {
       showMessage({
         message: 'Maaf Nama Lengkap masih kosong !',
+      });
+    } else if (data.kota.length === 0) {
+      showMessage({
+        message: 'Maaf Kota  - provinsi masih kosong !',
+      });
+    } else if (data.email.length === 0) {
+      showMessage({
+        message: 'Maaf email masih kosong !',
       });
     } else if (data.telepon.length === 0) {
       showMessage({
@@ -128,7 +137,7 @@ export default function Register({ navigation }) {
 
         <MyGap jarak={10} />
         <MyInput
-          label="Nama Pribadi"
+          label="Nama Pribadi *"
           iconname="person"
           value={data.nama_lengkap}
           onChangeText={value =>
@@ -144,7 +153,7 @@ export default function Register({ navigation }) {
 
         <MyGap jarak={10} />
         <MyInput
-          label="E - mail / Username"
+          label="E - mail *"
           iconname="mail"
           keyboardType="email-address"
           value={data.email}
@@ -158,7 +167,7 @@ export default function Register({ navigation }) {
 
         <MyGap jarak={10} />
         <MyInput
-          label="Telepon"
+          label="Telepon *"
           iconname="call"
           keyboardType="phone-pad"
           value={data.telepon}
@@ -171,7 +180,7 @@ export default function Register({ navigation }) {
         />
         <MyGap jarak={10} />
         <MyInput
-          label="Kota - Provinsi"
+          label="Kota - Provinsi *"
           iconname="location"
           value={data.kota}
           onChangeText={value => {
@@ -226,7 +235,7 @@ export default function Register({ navigation }) {
         </ScrollView>}
         <MyGap jarak={10} />
         <MyInput
-          label="Alamat lengkap"
+          label="Alamat lengkap *"
           iconname="map"
           value={data.alamat}
           onChangeText={value =>
@@ -244,7 +253,7 @@ export default function Register({ navigation }) {
         <MyInput
           label="Password"
           iconname="key"
-          secureTextEntry
+          secureTextEntry={show}
           value={data.password}
           onChangeText={value =>
             setData({
@@ -253,6 +262,40 @@ export default function Register({ navigation }) {
             })
           }
         />
+
+        {!show && <TouchableOpacity onPress={() => {
+          setShow(true)
+        }} style={{
+          paddingHorizontal: 5,
+          paddingVertical: 10,
+          justifyContent: 'flex-end',
+          alignItems: 'flex-end',
+          flexDirection: 'row'
+        }}>
+          <Icon size={windowWidth / 25} type='ionicon' name='eye-off-outline' />
+          <Text style={{
+            left: 5,
+            fontFamily: fonts.secondary[600],
+            fontSize: windowWidth / 30
+          }}>Hide Password</Text>
+        </TouchableOpacity>}
+
+        {show && <TouchableOpacity onPress={() => {
+          setShow(false)
+        }} style={{
+          paddingHorizontal: 5,
+          paddingVertical: 10,
+          justifyContent: 'flex-end',
+          alignItems: 'flex-end',
+          flexDirection: 'row'
+        }}>
+          <Icon size={windowWidth / 25} type='ionicon' name='eye-outline' />
+          <Text style={{
+            left: 5,
+            fontFamily: fonts.secondary[600],
+            fontSize: windowWidth / 30
+          }}>Show Password</Text>
+        </TouchableOpacity>}
         <MyGap jarak={20} />
 
         <MyButton

@@ -67,8 +67,8 @@ export default function BottomNavigator({ state, descriptors, navigation }) {
           iconName = 'file-tray-stacked-outline';
           Newlabel = 'History';
         } else if (label === 'Whatsapp') {
-          iconName = 'logo-whatsapp';
-          Newlabel = 'Whatsapp';
+          iconName = 'call-outline';
+          Newlabel = 'Contact';
         }
 
         return (

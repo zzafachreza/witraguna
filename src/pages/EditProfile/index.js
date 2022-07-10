@@ -39,6 +39,7 @@ export default function EditProfile({ navigation, route }) {
 
   const options = {
     includeBase64: true,
+    maxWidth: 300,
     quality: 0.3,
   };
 
@@ -208,7 +209,40 @@ export default function EditProfile({ navigation, route }) {
           </View>
         </View>
         <MyGap jarak={5} />
+        <View>
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: colors.primary,
 
+              // backgroundColor: colors.secondary,
+              width: 120,
+              height: 120,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              overflow: 'hidden',
+            }}>
+            <Image
+              source={{
+                uri:
+                  data.foto_user == ''
+                    ? 'https://zavalabs.com/nogambar.jpg'
+                    : data.foto_user,
+              }}
+              style={{ width: 120, height: 120 }}
+            />
+          </View>
+          <MyGap jarak={5} />
+          <MyButton
+            title="Ganti Foto"
+            Icons="cloud-upload-outline"
+            iconColor={colors.black}
+            colorText={colors.black}
+            // warna={colors.secondary}
+            onPress={() => getGallery(1)}
+          />
+        </View>
 
 
         <MyGap jarak={10} />

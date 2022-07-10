@@ -5,6 +5,7 @@ import {
   Button,
   View,
   Image,
+  TouchableOpacity,
   ScrollView,
   Dimensions,
   ImageBackground,
@@ -17,16 +18,18 @@ import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import { storeData, getData, urlAPI } from '../../utils/localStorage';
 import { showMessage } from 'react-native-flash-message';
+import { Icon } from 'react-native-elements';
+
 
 export default function Login({ navigation }) {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(true);
-
+  const [show, setShow] = useState(true);
   const [token, setToken] = useState('');
   const [data, setData] = useState({
-    email: '',
+    telepon: '',
     password: '',
   });
 
@@ -39,13 +42,13 @@ export default function Login({ navigation }) {
 
   // login ok
   const masuk = () => {
-    if (data.email.length === 0 && data.password.length === 0) {
+    if (data.telepon.length === 0 && data.password.length === 0) {
       showMessage({
-        message: 'Maaf email dan Password masih kosong !',
+        message: 'Maaf telepon dan Password masih kosong !',
       });
-    } else if (data.email.length === 0) {
+    } else if (data.telepon.length === 0) {
       showMessage({
-        message: 'Maaf email masih kosong !',
+        message: 'Maaf telepon masih kosong !',
       });
     } else if (data.password.length === 0) {
       showMessage({
@@ -122,14 +125,14 @@ export default function Login({ navigation }) {
 
           <MyGap jarak={20} />
           <MyInput
-            label="Email / Username"
-            iconname="person"
-            keyboardType="email-address"
-            value={data.email}
+            label="Nomor telepon"
+            iconname="call"
+            keyboardType="telepon-address"
+            value={data.telepon}
             onChangeText={value =>
               setData({
                 ...data,
-                email: value,
+                telepon: value,
               })
             }
           />
@@ -138,7 +141,7 @@ export default function Login({ navigation }) {
           <MyInput
             label="Password"
             iconname="key"
-            secureTextEntry
+            secureTextEntry={show}
             onChangeText={value =>
               setData({
                 ...data,
@@ -146,6 +149,40 @@ export default function Login({ navigation }) {
               })
             }
           />
+
+          {!show && <TouchableOpacity onPress={() => {
+            setShow(true)
+          }} style={{
+            paddingHorizontal: 5,
+            paddingVertical: 10,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            flexDirection: 'row'
+          }}>
+            <Icon size={windowWidth / 25} type='ionicon' name='eye-off-outline' />
+            <Text style={{
+              left: 5,
+              fontFamily: fonts.secondary[600],
+              fontSize: windowWidth / 30
+            }}>Hide Password</Text>
+          </TouchableOpacity>}
+
+          {show && <TouchableOpacity onPress={() => {
+            setShow(false)
+          }} style={{
+            paddingHorizontal: 5,
+            paddingVertical: 10,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            flexDirection: 'row'
+          }}>
+            <Icon size={windowWidth / 25} type='ionicon' name='eye-outline' />
+            <Text style={{
+              left: 5,
+              fontFamily: fonts.secondary[600],
+              fontSize: windowWidth / 30
+            }}>Show Password</Text>
+          </TouchableOpacity>}
           <MyGap jarak={40} />
           {valid && (
             <MyButton
@@ -155,17 +192,35 @@ export default function Login({ navigation }) {
               onPress={masuk}
             />
           )}
+
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('Add');
+          }} style={{
+            paddingHorizontal: 5,
+            paddingVertical: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row'
+          }}>
+            <Text style={{
+              left: 5,
+              fontFamily: fonts.secondary[600],
+              fontSize: windowWidth / 30
+            }}>Lupa Password ?</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-      {loading && (
-        <LottieView
-          source={require('../../assets/animation.json')}
-          autoPlay
-          loop
-          style={{ backgroundColor: colors.primary }}
-        />
-      )}
-    </ImageBackground>
+      {
+        loading && (
+          <LottieView
+            source={require('../../assets/animation.json')}
+            autoPlay
+            loop
+            style={{ backgroundColor: colors.primary }}
+          />
+        )
+      }
+    </ImageBackground >
   );
 }
 
